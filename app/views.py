@@ -1,7 +1,7 @@
 import json
 import os
 import requests
-from flask import render_template, redirect, request,send_file
+from flask import render_template, redirect, request,send_file, flash
 from werkzeug.utils import secure_filename
 from app import app
 from timeit import default_timer as timer
@@ -64,6 +64,10 @@ def submit():
     # Submit a new transaction
     address = "{0}/new_transaction".format(ADDR)
     requests.post(address, json=post_object)
+
+    # Flash a message to display an alert
+    flash("File was uploaded. Mine the block to make it visible on the chain.")
+
     end = timer()
     print(end - start)
     return redirect("/")
