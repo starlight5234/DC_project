@@ -1,7 +1,7 @@
 import json
 import os
 import requests
-from flask import render_template, redirect, request, send_file, flash
+from flask import render_template, redirect, request, send_file, flash, abort
 from werkzeug.utils import secure_filename
 from app import app
 from timeit import default_timer as timer
@@ -106,6 +106,10 @@ def submit():
 @app.route("/submit/<string:variable>", methods=["GET"])
 def download_file(variable):
     print("files: ", files)
-    p = files[variable.split("_chunk_0")[0]] if "_chunk_" in variable else files[variable]
-    return send_file(p, as_attachment=True)
+    try:
+        file_key = variable.split("_chunk_0")[0] if "_chunk_" in variable else variable
+        file_path = files[file_key]
+        return send_file(file_path, as_attachment=True)
+    except:
+        abort(404)
 
